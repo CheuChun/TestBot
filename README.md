@@ -15,7 +15,7 @@
 
 ```bash
 git clone <URL_REPO>
-cd <REPO_FOLDER>
+cd TestBot
 ```
 
 2. Установите зависимости:
