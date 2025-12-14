@@ -1,5 +1,6 @@
 import asyncio
 from aiogram import types
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 def split_text(text: str, limit: int = 4096):
     chunks = []
@@ -32,3 +33,9 @@ async def animate_dots(msg: types.Message):
             await msg.edit_text(f"⏳ Ваш ИИ-собеседник думает{dots}")
         except:
             break
+
+
+def payment_keyboard():
+    builder = InlineKeyboardBuilder()
+    builder.button(text=f"Оплатить", pay=True)
+    return builder.as_markup()
