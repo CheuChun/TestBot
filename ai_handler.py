@@ -7,13 +7,15 @@ load_dotenv()
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-async def call_openrouter(messages):
+
+async def call_openrouter(messages, model: str):
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
+
     payload = {
-        "model": "nex-agi/deepseek-v3.1-nex-n1:free",
+        "model": model,
         "messages": messages
     }
 
@@ -26,7 +28,12 @@ async def call_openrouter(messages):
                     return "Ошибка при обращении к ИИ"
 
                 data = await resp.json()
-                content = data["choices"][0]["message"]["content"]
+                choices = data.get("choices")
+                if not choices or "message" not in choices[0] or "content" not in choices[0]["message"]:
+                    logger.error(f"Неправильный формат ответа OpenRouter: {data}")
+                    return "Ошибка в ответе ИИ"
+
+                content = choices[0]["message"]["content"]
                 return content
         except Exception as e:
             logger.exception(f"Ошибка при вызове OpenRouter: {e}")
